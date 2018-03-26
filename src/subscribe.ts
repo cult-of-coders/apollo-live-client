@@ -1,10 +1,8 @@
 import { reduceStore } from './reduceStore';
 import { SubscribeMoreConfig } from './defs';
 
-export function subscribeToMore(component, config: SubscribeMoreConfig) {
-  const subscribe = component.props.data.subscribeToMore;
-
-  subscribe({
+export function subscribe(subscribeToMore, config: SubscribeMoreConfig) {
+  return subscribeToMore({
     document: config.document,
     variables: config.variables,
     updateQuery: (prev, { subscriptionData }) => {

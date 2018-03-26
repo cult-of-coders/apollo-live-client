@@ -1,3 +1,3 @@
 export { reduceStore } from './reduceStore';
-export { subscribeToMore } from './subscribeToMore';
+export { subscribe } from './subscribe';
 export { default as ReactiveEventFields } from './ReactiveEventFields';

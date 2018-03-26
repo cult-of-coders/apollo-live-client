@@ -1,7 +1,7 @@
 {
   "name": "apollo-live-client",
-  "version": "0.1.0",
-  "description": "Handles reactive events to easily work with live queries",
+  "version": "0.1.1",
+  "description": "Handles reactive events to easily work with Live Queries",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
