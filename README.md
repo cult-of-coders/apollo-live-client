@@ -1,6 +1,4 @@
-## Apollo Live Client
-
-# Apollo Live Implementation
+# Apollo Live Client
 
 ```js
 import { graphql } from 'react-apollo';
@@ -54,3 +52,7 @@ import { reduceStore } from 'apollo-live-client';
 ```
 
 `reduceStore` returns a new `object | object[]` based on the `ReactiveEvent` passed on. Note that `reduceStore` does not work with primitives, if for example, your query returns a string and not an object, tackle this yourself, it's much simpler that way.
+
+## Premium Support
+
+Looking to start or develop your new project with **GraphQL**? Reach out to us now, we can help you along every step: contact@cultofcoders.com. We specialise in building high availability GraphQL APIs and with the help with our awesome frontend developers we can easily consume any GraphQL API.
