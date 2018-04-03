@@ -10,12 +10,14 @@ export function subscribe(subscribeToMore, config: SubscribeMoreConfig) {
 
       const storeName = Object.keys(subscriptionData.data)[0];
 
-      return Object.assign({}, prev, {
+      const newStore = Object.assign({}, prev, {
         [storeName]: reduceStore(
           subscriptionData.data[storeName],
           prev[storeName]
         ),
       });
+
+      return newStore;
     },
   });
 }

@@ -2,7 +2,7 @@ import { ReactiveEvent, StoreObject, Event } from './defs';
 
 export function reduceStore(
   reactiveEvent: ReactiveEvent,
-  store: Array<StoreObject> | StoreObject
+  store: StoreObject[] | StoreObject
 ) {
   if (store instanceof Array) {
     return reduceStoreArray(reactiveEvent, store);
@@ -34,8 +34,8 @@ export function reduceStoreObject(
 
 export function reduceStoreArray(
   reactiveEvent: ReactiveEvent,
-  store: Array<StoreObject>
-): Array<StoreObject> {
+  store: StoreObject[]
+): StoreObject[] {
   const { event, type, doc, _id } = reactiveEvent;
 
   if (event === Event.ADDED) {
@@ -55,9 +55,11 @@ export function reduceStoreArray(
         return true;
       }
     });
+
     if (!found) {
-      return;
+      return store;
     }
+
     const newFound = Object.assign({}, found, doc);
     return [
       ...store.slice(0, foundIdx),
