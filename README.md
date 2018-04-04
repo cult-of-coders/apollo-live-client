@@ -1,13 +1,14 @@
 # Apollo Live Client
 
-This package provides an easy way to work with `apollo-live-server` subscriptions.
+This project is sponsored by [Cult of Coders](https://www.cultofcoders.com)
+
+This package provides an easy way to work with [`apollo-live-server`](https://github.com/cult-of-coders/apollo-live-server) subscriptions.
 
 ## Usage
 
 ```js
-import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Subscription } from 'apollo-live-client';
+import { ReactiveQuery } from 'apollo-live-client';
 
 const GET_MESSAGES = gql`
   query {
@@ -36,22 +37,20 @@ const SUBSCRIBE_MESSAGES = gql`
 For this system to work, the subscription root (`messages`) needs to be the same as the query . And you can query for more data from other fields in the RootQuery.
 
 ```js
-export default () => {
-  return (
-    <ReactiveQuery
-      query={GET_ITEMS}
-      subscription={SUBSCRIBE_MESSAGES}
-      variables={{ threadId: 'XXX' }}
-    >
-      {({ data: { notifications }, loading, error }) => {
-        if (loading) return <Loading />;
-        if (error) return <Error error={error} />;
+const MessagesWithData = () => (
+  <ReactiveQuery
+    query={GET_ITEMS}
+    subscription={SUBSCRIBE_MESSAGES}
+    variables={{ threadId: 'XXX' }}
+  >
+    {({ data: { notifications }, loading, error }) => {
+      if (loading) return <Loading />;
+      if (error) return <Error error={error} />;
 
-        return <PresentationalComponent notifications={notifications} />;
-      }}
-    </ReactiveQuery>
-  );
-};
+      return <PresentationalComponent notifications={notifications} />;
+    }}
+  </ReactiveQuery>
+);
 ```
 
 ## Customisability
@@ -77,7 +76,3 @@ subscribeToMore({
   },
 })
 ```
-
-## Premium Support
-
-Looking to start or develop your new project with **GraphQL**? Reach out to us now, we can help you along every step: contact@cultofcoders.com. We specialise in building high availability GraphQL APIs and with the help with our awesome frontend developers we can easily consume any GraphQL API.
