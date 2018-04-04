@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "allowJs": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -10,12 +11,11 @@
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "pretty": true,
+    "jsx": "react",
     "removeComments": true,
-    "declaration": true,
     "typeRoots": ["node_modules/@types"]
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx"],
+  "exclude": ["node_modules", "dist"]
 }

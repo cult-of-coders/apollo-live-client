@@ -1,6 +1,6 @@
 {
   "name": "apollo-live-client",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Handles reactive events to easily work with Live Queries",
   "main": "dist/index.js",
   "repository": {
@@ -13,7 +13,7 @@
     "pretest": "npm run compile",
     "test": "npm run testonly --",
     "posttest": "npm run lint",
-    "lint": "tslint --type-check --project ./tsconfig.json ./src/**/*.ts",
+    "lint": "tslint --type-check --project ./tsconfig.json ./src/**/*",
     "watch": "tsc -w",
     "testonly": "mocha --reporter spec --full-trace ./dist/test/*.js",
     "coverage":
@@ -22,8 +22,12 @@
       "remap-istanbul --input coverage/coverage.raw.json --type lcovonly --output coverage/lcov.info",
     "prepublishOnly": "npm run clean && npm run compile"
   },
+  "peerDependencies": {
+    "react": "0.16.x"
+  },
   "devDependencies": {
     "@types/graphql": "^0.11.3",
+    "@types/react": "16.3.5",
     "@types/mocha": "^2.2.39",
     "@types/node": "^8.0.28",
     "chai": "^4.1.2",

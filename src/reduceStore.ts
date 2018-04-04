@@ -14,21 +14,21 @@ export function reduceStoreObject(
   reactiveEvent: ReactiveEvent,
   store: StoreObject
 ) {
-  const { event, type, doc, _id } = reactiveEvent;
+  const { event, doc } = reactiveEvent;
   if (event === Event.ADDED) {
-    return {
-      _id,
-      __typename: type,
-      ...doc,
-    };
+    // check if it exists
+
+    if (store) {
+      return Object.assign({}, store, doc);
+    } else {
+      return doc;
+    }
   }
   if (event === Event.CHANGED) {
-    return Object.assign({}, store, doc);
+    return Object.assign({}, store || {}, doc);
   }
   if (event === Event.REMOVED) {
-    return {
-      _id: -1,
-    };
+    return null;
   }
 }
 
@@ -36,39 +36,53 @@ export function reduceStoreArray(
   reactiveEvent: ReactiveEvent,
   store: StoreObject[]
 ): StoreObject[] {
-  const { event, type, doc, _id } = reactiveEvent;
+  const { event, doc } = reactiveEvent;
+
+  if (!doc._id) {
+    throw new Error(
+      'The document does not have _id set, is it present in the subscription?'
+    );
+  }
 
   if (event === Event.ADDED) {
-    const entry = {
-      _id,
-      __typename: type,
-      ...doc,
-    };
-    return [entry, ...store];
+    // check if it exists
+    const { idx, found } = findIndexInStore(store, doc._id);
+
+    if (found) {
+      return [...store.slice(0, idx), found, ...store.slice(idx + 1)];
+    }
+
+    return [doc, ...store];
   }
 
   if (event === Event.CHANGED) {
-    let foundIdx;
-    const found = store.find((item, idx) => {
-      if (item._id === _id) {
-        foundIdx = idx;
-        return true;
-      }
-    });
+    const { idx, found } = findIndexInStore(store, doc._id);
 
     if (!found) {
       return store;
     }
 
     const newFound = Object.assign({}, found, doc);
-    return [
-      ...store.slice(0, foundIdx),
-      newFound,
-      ...store.slice(foundIdx + 1),
-    ];
+    return [...store.slice(0, idx), newFound, ...store.slice(idx + 1)];
   }
 
   if (event === Event.REMOVED) {
-    return store.filter(item => item._id !== _id);
+    return store.filter(item => item._id !== doc._id);
   }
+}
+
+/**
+ * @param store
+ * @param _id
+ */
+function findIndexInStore(store, _id) {
+  let foundIdx;
+  const found = store.find((item, idx) => {
+    if (item._id === _id) {
+      foundIdx = idx;
+      return true;
+    }
+  });
+
+  return { idx: foundIdx, found };
 }

@@ -1,14 +1,17 @@
 # Apollo Live Client
 
+This package provides an easy way to work with `apollo-live-server` subscriptions.
+
+## Usage
+
 ```js
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { subscribe, ReactiveEventFields } from 'apollo-live-client';
+import { Subscription } from 'apollo-live-client';
 
-// ReactiveEventFields is just: { type, event, _id, doc }
-const QUERY_NOTIFICATIONS = gql`
-  query notifications {
-    notifications(reactive: true) {
+const GET_MESSAGES = gql`
+  query {
+    messages(threadId: String) {
       _id
       text
       createdAt
@@ -16,79 +19,64 @@ const QUERY_NOTIFICATIONS = gql`
   }
 `;
 
-const SUBSCRIPTION_NOTIFICATIONS = gql`
-  subscription MySub($userId: String) {
-    notifications(userId: $userId) {
-      ${ReactiveEventFields}
+const SUBSCRIBE_MESSAGES = gql`
+  subscription {
+    messages(threadId: String) {
+      event
+      doc {
+        _id
+        text
+        createdAt
+      }
     }
   }
 `;
 ```
 
-Via `graphql` higher order component:
+For this system to work, the subscription root (`messages`) needs to be the same as the query . And you can query for more data from other fields in the RootQuery.
 
 ```js
-class Notifications extends React.Component {
-  componentWillMount() {
-    const { subscribeToMore } = this.props.data;
-    this.unsubscribe = subscribe(subscribeToMore, {
-      document: SUBSCRIPTION_NOTIFICATIONS
-      variables: {userId: this.props.userId},
-    })
-
-    // You don't have to unsubscribe in unmounting, this is handled automatically
-  }
-
-  render() { ... }
-}
-
-export default graphql(QUERY_NOTIFICATIONS)(Notifications);
-```
-
-Via `<Query/>`:
-
-```js
-class Notifications extends React.Component {
-  componentWillMount() {
-    const { subscribeToMore } = this.props; // note that unlike the one above it doesn't have .data
-    this.unsubscribe = subscribe(subscribeToMore, ...)
-  }
-
-  render() { ... }
-}
-
 export default () => {
   return (
-    <Query query={GET_ITEMS}>
-      {props => {
-        // You may be tempted to do the subscription here, don't because on every change you'll resubscribe again
-        return <Notifications {...props} />;
+    <ReactiveQuery
+      query={GET_ITEMS}
+      subscription={SUBSCRIBE_MESSAGES}
+      variables={{ threadId: 'XXX' }}
+    >
+      {({ data: { notifications }, loading, error }) => {
+        if (loading) return <Loading />;
+        if (error) return <Error error={error} />;
+
+        return <PresentationalComponent notifications={notifications} />;
       }}
-    </Query>
+    </ReactiveQuery>
   );
 };
 ```
 
-Note that the name of subscription and query is the same `notifications`. This is how this package knows how and what to update.
+## Customisability
 
-You can also roll-out your custom `updateQuery` and make use of `reduceStore` if you have more complex things in mind, or you are subscribing to multiple sources in the same place.
+You can customise the behavior of how you handle incomming data from subscriptions, by rolling out your
+own `subscribeToMore` and custom `updateQuery` method.
+
+Read more about this here:
+https://www.apollographql.com/docs/react/advanced/subscriptions.html
 
 ```js
 import { reduceStore } from 'apollo-live-client';
 
 // And in your updateQuery handler of subscribeToMore:
-{
-  ...,
+subscribeToMore({
+  document: SUBSCRIBE_MESSAGES,
+  variables: {},
   updateQuery: (prev, {subscriptionData}) {
     const reactiveEvent = subscriptionData.data.notifications;
     return Object.assign({}, prev, {
       notifications: reduceStore(reactiveEvent, prev.notifications)
     })
   },
-}
+})
 ```
-
-`reduceStore` returns a new `object | object[]` based on the `ReactiveEvent` passed on. Note that `reduceStore` does not work with primitives, if for example, your query returns a string and not an object, tackle this yourself, it's much simpler that way.
 
 ## Premium Support
 

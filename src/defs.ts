@@ -4,20 +4,25 @@ export enum Event {
   REMOVED = 'removed',
 }
 
+export type ReactiveEvent = {
+  event: Event;
+  doc: StoreObject;
+};
+
 export interface StoreObject {
-  _id: string;
+  _id: string | number;
   __typename: string;
   [key: string]: any;
 }
 
-export interface ReactiveEvent {
-  event: Event;
+export type SubscribeMoreParam = {
   type: string;
-  _id: string;
-  doc?: any;
-}
+  value: any;
+};
 
 export interface SubscribeMoreConfig {
-  document: any;
-  variables: object;
+  name: string;
+  params: {
+    [key: string]: SubscribeMoreParam;
+  };
 }
