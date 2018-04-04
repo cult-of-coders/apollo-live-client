@@ -76,3 +76,19 @@ subscribeToMore({
   },
 })
 ```
+
+## Bare-bonus subscription
+
+To provide you with even more flexibility, you can just roll your own subscription handler and reducer:
+
+```js
+// client = Apollo Client
+const observable = client.subscribe({ query: SUBSCRIBE_NEWSFEED });
+const subscription = observable.subscribe({
+  next({ data }) {
+    // data is your payload
+    // do something with it
+  },
+});
+subscription.unsubscribe();
+```

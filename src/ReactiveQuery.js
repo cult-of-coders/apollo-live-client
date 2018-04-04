@@ -1,14 +1,20 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { reduceStore } from './reduceStore';
 import { Query } from 'react-apollo';
 
 export default class ReactiveQuery extends React.Component {
+  static propTypes = {
+    children: PropTypes.func.isRequired,
+    query: PropTypes.object.isRequired,
+    subscription: PropTypes.object.isRequired,
+  };
+
   render() {
     const { children, ...rest } = this.props;
 
     return (
-      <Query query={rest.query} variables={rest.variables} delay={true}>
+      <Query query={rest.query} variables={rest.variables}>
         {props => {
           return (
             <Subscription
