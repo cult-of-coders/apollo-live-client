@@ -77,7 +77,7 @@ subscribeToMore({
 })
 ```
 
-## Bare-bonus subscription
+## Bare-bones subscription
 
 To provide you with even more flexibility, you can just roll your own subscription handler and reducer:
 
