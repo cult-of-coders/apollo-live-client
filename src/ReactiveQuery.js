@@ -11,10 +11,10 @@ export default class ReactiveQuery extends React.Component {
   };
 
   render() {
-    const { children, subscription, variables, ...rest } = this.props;
+    const { children, subscription, query, variables, ...rest } = this.props;
 
     return (
-      <Query variables={variables} {...rest}>
+      <Query query={query} variables={variables} {...rest}>
         {props => {
           return (
             <Subscription

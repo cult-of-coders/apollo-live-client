@@ -53,6 +53,8 @@ const MessagesWithData = () => (
 );
 ```
 
+Any other prop passed to `ReactiveQuery` that is not `subscription` is going to be passed to the actual `Query` object behind the scenes.
+
 ## Customisability
 
 You can customise the behavior of how you handle incomming data from subscriptions, by rolling out your
