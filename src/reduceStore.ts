@@ -15,18 +15,22 @@ export function reduceStoreObject(
   store: StoreObject
 ) {
   const { event, doc } = reactiveEvent;
+  const { __typename, ...rest } = doc;
+
   if (event === Event.ADDED) {
     // check if it exists
 
     if (store) {
-      return Object.assign({}, store, doc);
+      return Object.assign({}, store, rest);
     } else {
       return doc;
     }
   }
+
   if (event === Event.CHANGED) {
-    return Object.assign({}, store || {}, doc);
+    return Object.assign({}, store || {}, rest);
   }
+
   if (event === Event.REMOVED) {
     return null;
   }
